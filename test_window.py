@@ -3,7 +3,7 @@ from windows import TelescopeEventView
 import tkinter as tk
 import numpy as np
 
-lst = LST(0, 0, 0)
+lst = LST(position_x=0, position_y=0, telescope_id=0)
 
 root = tk.Tk()
 viewer1 = TelescopeEventView(root, lst, np.random.normal(size=lst.n_pixel))
