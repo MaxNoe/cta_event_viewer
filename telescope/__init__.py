@@ -2,9 +2,9 @@ import pandas as pd
 
 lst_mapping = pd.read_csv('telescope/lst.csv')
 
+
 class Telescope(object):
     """The base Telescope class"""
-
 
     def __init__(self, position_x, position_y, telescope_id):
         """
@@ -23,6 +23,8 @@ class LST(Telescope):
     pixel_y = lst_mapping.pixel_y.values
     n_pixel = len(pixel_x)
     pixel_shape = 'hexagon'
+    pixel_size = 0.025
+    pixel_orientation = 0
 
     def __init__(self, position_x, position_y, telescope_id):
         super().__init__(position_x, position_y, telescope_id)
