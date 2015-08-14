@@ -6,7 +6,7 @@ from matplotlib.collections import PatchCollection
 
 
 class CameraPlot(object):
-    '''A Class for a camera plot'''
+    '''A Class for a camera pixel'''
 
     def __init__(
         self,
@@ -18,18 +18,16 @@ class CameraPlot(object):
         vmax=None,
     ):
         '''
-        :telescope: the telescope class for the plot
+        :telescope: the telescope class for the pixel
         :data: array-like with one value for each pixel
-        :cmap: a matplotlib colormap string or instance
+        :cmap: a matpixellib colormap string or instance
         :vmin: minimum value of the colormap
         :vmax: maximum value of the colormap
 
         '''
         self.telescope = telescope
         if data is None:
-            self._data = np.zeros(telescope.n_pixel)
-        else:
-            self._data = data
+            data = np.zeros(telescope.n_pixel)
 
         patches = []
         if telescope.pixel_shape == 'hexagon':
@@ -42,14 +40,16 @@ class CameraPlot(object):
                         orientation=telescope.pixel_orientation,
                     )
                 )
-        self.plot = PatchCollection(patches)
-        self.plot.set_linewidth(0)
-        self.plot.set_cmap(cmap)
-        self.plot.set_array(data)
-        self.plot.set_clim(vmin, vmax)
+        self.pixel = PatchCollection(patches)
+        self.pixel.set_linewidth(0)
+        self.pixel.set_cmap(cmap)
+        self.pixel.set_array(data)
+        self.pixel.set_clim(vmin, vmax)
+        self.vmin = vmin
+        self.vmax = vmax
         self.ax = ax
         self.ax.axis('off')
-        self.ax.add_collection(self.plot)
+        self.ax.add_collection(self.pixel)
         self.ax.set_xlim(
             self.telescope.pixel_x.min() - self.telescope.pixel_size,
             self.telescope.pixel_x.max() + self.telescope.pixel_size,
@@ -61,9 +61,11 @@ class CameraPlot(object):
 
     @property
     def data(self):
-        return self._data
+        return self.pixel.get_array()
 
     @data.setter
-    def data(self, value):
-        self._data
-        self.update()
+    def data(self, data):
+        self.pixel.set_array(data)
+        if not self.vmin or not self.vmax:
+            self.pixel.autoscale()
+        self.pixel.changed()
