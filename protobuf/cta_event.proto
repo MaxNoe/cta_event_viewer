@@ -1,0 +1,6 @@
+package cta_event;
+
+message CTAEvent {
+  required uint32 telescope_id = 1;
+  repeated float data = 2 [packed=true];
+}
