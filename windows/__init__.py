@@ -21,3 +21,12 @@ class TelescopeEventView(tk.Frame):
         self.canvas.show()
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.canvas._tkcanvas.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+    @property
+    def data(self):
+        return self.camera_plot.data
+
+    @data.setter
+    def data(self, value):
+        self.camera_plot.data = value
+        self.canvas.draw()
