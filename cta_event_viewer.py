@@ -8,14 +8,14 @@ from threading import Event
 
 from collections import deque
 
-queue = deque()
+queue = deque(maxlen=100)
 stop_event = Event()
 
 
 def check_queue():
     if len(queue) > 0:
         root.event_generate('<<new_event>>')
-    root.after(1, check_queue)
+    root.after(10, check_queue)
 
 
 def handle_new_event(event):
@@ -68,4 +68,5 @@ if __name__ == '__main__':
         root.after(1, check_queue)
         root.mainloop()
     except (SystemExit, KeyboardInterrupt):
-        stop_event.set()
+        pass
+    stop_event.set()
