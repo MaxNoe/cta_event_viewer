@@ -34,4 +34,4 @@ class LST(Telescope):
     pixel_orientation = angle
 
     def __init__(self, position_x, position_y, telescope_id):
-        super().__init__(position_x, position_y, telescope_id)
+        super(LST, self).__init__(position_x, position_y, telescope_id)

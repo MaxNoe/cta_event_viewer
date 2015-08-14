@@ -1,4 +1,4 @@
-import tkinter as tk
+import Tkinter as tk
 import matplotlib
 matplotlib.use('tkagg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -7,12 +7,12 @@ from matplotlib.figure import Figure
 from plots import CameraPlot
 
 
-class TelescopeEventView(tk.Frame):
+class TelescopeEventView(tk.Frame, object):
     """ A frame showing the camera view of a single telescope """
 
     def __init__(self, root, telescope, data=None, *args, **kwargs):
         self.telescope = telescope
-        super().__init__(root)
+        super(TelescopeEventView, self).__init__(root)
         self.figure = Figure(figsize=(5, 5), facecolor='none')
         self.ax = self.figure.add_subplot(1, 1, 1, aspect=1)
         self.camera_plot = CameraPlot(telescope, self.ax, data, *args, **kwargs)
