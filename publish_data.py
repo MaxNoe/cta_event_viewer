@@ -1,3 +1,4 @@
+from __future__ import division
 from protobuf.cta_event_pb2 import CTAEvent
 import zmq
 from time import sleep
@@ -19,4 +20,4 @@ while True:
     event.data.extend(list(data))
     socket.send('1000 ' + event.SerializeToString())
     # socket.send('1000 Hallo Welt')
-    sleep(0.1)
+    sleep(1/16)
