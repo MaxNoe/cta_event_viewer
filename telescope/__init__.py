@@ -30,7 +30,7 @@ class LST(Telescope):
     pixel_y = lst_mapping.pixel_y.values
     n_pixel = len(pixel_x)
     pixel_shape = 'hexagon'
-    pixel_size = 0.025
+    pixel_size = 0.03
     pixel_orientation = angle
 
     def __init__(self, position_x, position_y, telescope_id):
