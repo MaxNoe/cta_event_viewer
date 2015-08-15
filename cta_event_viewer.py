@@ -1,3 +1,15 @@
+'''
+A viewer for cta events, currently only LSTs are supported
+
+Usage:
+    cta_event_viewer.py [options]
+
+Options:
+    --ip=<ip>       the ip to listen to [default: 127.0.0.1]
+    --port=<port>   the port to listen to [default: 5000]
+    --rows=<rows>   number of rows of telescope views [default: 2]
+    --cols=<cols>   number of columns of telescope views [default: 2]
+'''
 from telescope import LST
 from windows import TelescopeEventView
 import Tkinter as tk
@@ -7,6 +19,9 @@ from read import ReadProtoBuf
 from threading import Event
 
 from collections import deque
+from docopt import docopt
+
+args = docopt(__doc__)
 
 queue = deque(maxlen=100)
 stop_event = Event()
@@ -21,45 +36,30 @@ def check_queue():
 def handle_new_event(event):
     viewer = next(viewers)
     event = queue.popleft()
+    print(len(queue))
     viewer.data = np.array(event.data)
 
-
-lst = LST(position_x=0, position_y=0, telescope_id=0)
 
 root = tk.Tk()
 
 reader = ReadProtoBuf(
-    '127.0.0.1',
-    5000,
+    args['--ip'],
+    args['--port'],
     queue,
     stop_event,
 )
 
+viewers = []
+for i in range(int(args['--rows'])):
+    root.rowconfigure(i, weight=1)
+    for j in range(int(args['--cols'])):
+        root.columnconfigure(j, weight=1)
+        viewer = TelescopeEventView(root, LST, cmap='hot')
+        viewer.grid(row=i, column=j, sticky='nswe')
+        viewers.append(viewer)
 
-top = tk.Frame(root)
-bottom = tk.Frame(root)
-
-viewer1 = TelescopeEventView(top, lst)
-viewer2 = TelescopeEventView(top, lst)
-viewer3 = TelescopeEventView(top, lst)
-viewer4 = TelescopeEventView(bottom, lst)
-viewer5 = TelescopeEventView(bottom, lst)
-viewer6 = TelescopeEventView(bottom, lst)
-
-viewers = cycle(
-    [viewer1, viewer2, viewer3, viewer4, viewer5, viewer6]
-)
-
-viewer1.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-viewer2.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-viewer3.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-viewer4.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-viewer5.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-viewer6.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-
+viewers = cycle(viewers)
 root.bind('<<new_event>>', handle_new_event)
-top.pack(side=tk.TOP, expand=True, fill=tk.BOTH)
-bottom.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
 
 
 if __name__ == '__main__':
