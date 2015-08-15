@@ -48,15 +48,14 @@ class CameraPlot(object):
         self.vmin = vmin
         self.vmax = vmax
         self.ax = ax
-        self.ax.axis('off')
         self.ax.add_collection(self.pixel)
         self.ax.set_xlim(
-            self.telescope.pixel_x.min() - self.telescope.pixel_size,
-            self.telescope.pixel_x.max() + self.telescope.pixel_size,
+            self.telescope.pixel_x.min() - 2 * self.telescope.pixel_size,
+            self.telescope.pixel_x.max() + 2 * self.telescope.pixel_size,
         )
         self.ax.set_ylim(
-            self.telescope.pixel_y.min() - self.telescope.pixel_size,
-            self.telescope.pixel_y.max() + self.telescope.pixel_size,
+            self.telescope.pixel_y.min() - 2 * self.telescope.pixel_size,
+            self.telescope.pixel_y.max() + 2 * self.telescope.pixel_size,
         )
 
     @property
